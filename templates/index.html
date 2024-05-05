@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/static/style.css">
+
+    <title>Odor De-mixing with PyTorch</title>
+  </head>
+  <body class="text-center">
+    <form class="home" method="post" action="/">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <label for="autocomplete">Enter text:</label>
+    <input type="text" id="autocomplete" autocomplete="off">
+    <button type="button" id="add" disabled>Add odor</button>
+    <div class="suggestion-box" id="suggestions" style="display: none;"></div>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputField = document.getElementById('autocomplete');
+            const suggestionsBox = document.getElementById('suggestions');
+            const add = document.getElementById('add');
+            const form = document.querySelector('.home');
+            let odors = []
+
+            fetch('/static/dict.csv')
+                .then(response => response.text())
+                .then(csv => {
+                    let data = Papa.parse(csv, {header: true}).data;
+                    data.sort((a, b) => a.Name.localeCompare(b.Name));
+                    inputField.addEventListener('input', function() {
+                        const input = this.value.toLowerCase();
+                        add.disabled = true;
+                        suggestionsBox.innerHTML = '';
+                        if (input.length > 0) {
+                            // filter data based on if it starts with input
+                            const filtered = data.filter(item => item["Name"].toLowerCase().startsWith(input) && !odors.includes(item["Name"].toLowerCase())).slice(0, 10);
+                            // const filtered = data.filter(item => item["Name"].toLowerCase().includes(input) && !odors.includes(item["Name"].toLowerCase())).slice(0, 10);
+                            console.log(filtered)
+                            filtered.forEach(item => {
+                                const div = document.createElement('div');
+                                div.textContent = item.Name;
+                                
+                                div.onclick = function() {
+                                    inputField.value = item.Name;
+                                    suggestionsBox.style.display = 'none';
+                                    if (odors.length < 10) {
+                                        add.disabled = false;
+                                    }
+                                };
+                                suggestionsBox.appendChild(div);
+                            });
+                            suggestionsBox.style.display = 'block';
+                        } else {
+                            suggestionsBox.style.display = 'none';
+                        }
+                    });
+
+                    document.addEventListener('click', function(e) {
+                        if (e.target !== inputField) {
+                            suggestionsBox.style.display = 'none';
+                        }
+                    });
+                });
+            
+            add.addEventListener('click', function() {
+                if (!odors.includes(inputField.value)) {
+                    const odor = inputField.value.toLowerCase();
+                    const row = document.createElement('div');
+                    row.style.display = 'flex';
+                    row.style.justifyContent = 'space-between';
+                    row.style.marginBottom = '10px';
+
+                    odors.push(odor);
+                    // add input with value to form
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = odor;
+                    input.name = odor;
+                    input.readOnly = true;
+
+                    // add delete button
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = function() {
+                        odors = odors.filter(item => item !== odor);
+                        form.removeChild(row);
+
+                    };
+
+                    // add button and input to row, then add row to form
+                    row.append(input);
+                    row.append(deleteButton);
+                    form.prepend(row);
+                    inputField.value = '';
+                }
+                
+            });
+        });
+    </script>
+
+    <script src="//code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="//stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  </body>
+</html>
