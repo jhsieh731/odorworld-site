@@ -21,13 +21,24 @@
     <title>Odor De-mixing with PyTorch</title>
   </head>
   <body class="text-center">
-    <form class="home" method="post" action="/">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    <label for="autocomplete">Enter text:</label>
-    <input type="text" id="autocomplete" autocomplete="off">
+    <h1 id="header">Odor De-mixer</h1>
+
+    <label for="autocomplete">Enter odor:</label>
+    <input type="text" id="autocomplete" autocomplete="off" placeholder="start typing to fill">
     <button type="button" id="add" disabled>Add odor</button>
     <div class="suggestion-box" id="suggestions" style="display: none;"></div>
+
+    <form class="home" method="post" action="/">
+        <div class="rowindex">
+            <label for="encoding">Encoding Type:</label>
+            <select title="Encoding type" name="encoding" id="encoding">
+                <option value="U">Noisy Uniform</option>
+                <option value="I">Noisy Fixed Intensity</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" id="submit" disabled>Submit</button>
+    </form>
     
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
@@ -37,6 +48,7 @@
             const suggestionsBox = document.getElementById('suggestions');
             const add = document.getElementById('add');
             const form = document.querySelector('.home');
+            const submit = document.getElementById('submit');
             let odors = []
 
             fetch('/static/dict.csv')
@@ -51,8 +63,6 @@
                         if (input.length > 0) {
                             // filter data based on if it starts with input
                             const filtered = data.filter(item => item["Name"].toLowerCase().startsWith(input) && !odors.includes(item["Name"].toLowerCase())).slice(0, 10);
-                            // const filtered = data.filter(item => item["Name"].toLowerCase().includes(input) && !odors.includes(item["Name"].toLowerCase())).slice(0, 10);
-                            console.log(filtered)
                             filtered.forEach(item => {
                                 const div = document.createElement('div');
                                 div.textContent = item.Name;
@@ -87,26 +97,35 @@
                     row.style.justifyContent = 'space-between';
                     row.style.marginBottom = '10px';
 
+
                     odors.push(odor);
+                    submit.disabled = false;
                     // add input with value to form
                     const input = document.createElement('input');
                     input.type = 'text';
                     input.value = odor;
                     input.name = odor;
                     input.readOnly = true;
+                    input.style.border = 'none';
 
                     // add delete button
                     const deleteButton = document.createElement('button');
+                    deleteButton.style.backgroundColor = 'red';
                     deleteButton.textContent = 'Delete';
+
+                    
                     deleteButton.onclick = function() {
                         odors = odors.filter(item => item !== odor);
                         form.removeChild(row);
+                        if (odors.length < 1) {
+                            submit.disabled = true;
+                        }
 
                     };
 
                     // add button and input to row, then add row to form
-                    row.append(input);
                     row.append(deleteButton);
+                    row.append(input);
                     form.prepend(row);
                     inputField.value = '';
                 }

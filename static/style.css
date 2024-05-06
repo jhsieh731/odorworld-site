@@ -1,3 +1,8 @@
+.text-center {
+    text-align: center;
+    margin: 1em;
+}
+
 .suggestion-box {
     position: absolute;
     border: 1px solid #ccc;
@@ -8,7 +13,7 @@
     right: 0;
     background: white;
     width: 200px;
-    height: 200px;
+    /* height: 200px; */
 }
 .suggestion-box div {
     padding: 8px;
@@ -25,4 +30,107 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+}
+
+button {
+    padding: 10px 20px;       /* Top/bottom and left/right padding */
+    border-radius: 50px;      /* Creates a fully rounded button */
+    border: none;             /* No border */
+    background-color: #4CAF50;/* Green background */
+    color: white;             /* White text */
+    text-align: center;       /* Center the text inside the button */
+    text-decoration: none;    /* Remove underline from links */
+    display: inline-block;    /* Allows setting dimensions */
+    font-size: 16px;          /* Text size */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for background and shadow */
+    cursor: pointer;          /* Cursor appears as a pointer */
+    outline: none;            /* Remove focus outline */
+    margin: 0em 1em;
+}
+
+/* Hover effect for the button */
+button:hover {
+    background-color: #3e8e41; /* Darker shade of green */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Adds a shadow when hovered */
+}
+
+/* Active state of the button */
+button:active {
+    background-color: #3e8e41;    /* Keeps the hover color */
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2) inset; /* Inner shadow to give a pressed effect */
+}
+
+
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+    margin: 1em;
+}
+
+.rowindex {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 1em;
+}
+
+select {
+    margin: 1em;
+}
+
+#autocomplete {
+    padding: 10px 20px;
+    margin-left: 40px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#autocomplete:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+#encoding {
+    padding: 10px 20px;
+    margin-left: 40px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#back {
+    margin-left: 10em;
+}
+
+.spacer {
+    margin-right: 15em;
+}
+
+ul {
+    margin: auto;
+}
+
+.flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 1em;
+}
+
+td, th {
+    padding: 0em 0.5em;
+}
+
+#header {
+    margin: 1em;
 }
