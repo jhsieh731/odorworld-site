@@ -1,5 +1,6 @@
+-f https://download.pytorch.org/whl/torch_stable.html
+torch==2.0.1+cpu
 Flask==3.0.0
 numpy==1.23.5
 matplotlib==3.6.2
-https://download.pytorch.org/whl/cpu/torch_stable.html
 gunicorn==20.1.0
