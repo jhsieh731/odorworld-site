@@ -83,5 +83,4 @@ def get_pred(num_classes, encoding_type, odors):
     predicted_odors = [list(dictionary.keys())[i] for i in preds]
     top_15 = [list(dictionary.keys())[i] for i in top_15_preds]
     categories = [list(data)[i]["Category"] for i in top_15_preds]
-    print(categories)
     return (input, predicted_odors, top_15, probs, categories)

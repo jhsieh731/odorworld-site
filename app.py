@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from io import BytesIO
 import base64
+import importlib
+importlib.reload(utils)
 matplotlib.use('Agg')
 
 app = Flask(__name__)
@@ -32,17 +34,12 @@ def create_heatmap(data):
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        print('1', request.form)
-        print('2', request.data)
         encoding = request.form.get('encoding')
         odors = list(request.form.keys())[:-1]
-        print('3', odors)
         input, predictions, top_15_labels, top_15_probs, categories = utils.get_pred(len(odors), encoding, odors)
         top_15 = zip(top_15_labels, [round(x, 4) for x in top_15_probs], categories)
-        # image_data = create_heatmap(input)
-        print(input.shape)
         image_data = create_heatmap(input.reshape(13, 137))
-        return render_template('result.html', input_odors=odors, input=image_data, odors=predictions, top15=top_15)
+        return render_template('result.html', input_odors=sorted(odors), input=image_data, odors=sorted(predictions), top15=top_15)
     return render_template('index.html')
 
 
